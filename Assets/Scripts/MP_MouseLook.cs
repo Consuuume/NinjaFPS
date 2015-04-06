@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+using TeamUtility.IO;
 
 [Serializable]
-public class MouseLook
+public class MP_MouseLook
 {
     public float XSensitivity = 2f;
     public float YSensitivity = 2f;
@@ -27,20 +27,20 @@ public class MouseLook
 
     public void LookRotation(Transform character, Transform camera)
     {
-        float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-        float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+        float yRot = InputManager.GetAxis("LookHorizontal") * XSensitivity;
+        float xRot = InputManager.GetAxis("LookVertical") * YSensitivity;
 
-        m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
-        m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
+        m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
+        m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
 
-        if (clampVerticalRotation)
-            m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
+        if(clampVerticalRotation)
+            m_CameraTargetRot = ClampRotationAroundXAxis (m_CameraTargetRot);
 
-        if (smooth)
+        if(smooth)
         {
-            character.localRotation = Quaternion.Slerp(character.localRotation, m_CharacterTargetRot,
+            character.localRotation = Quaternion.Slerp (character.localRotation, m_CharacterTargetRot,
                 smoothTime * Time.deltaTime);
-            camera.localRotation = Quaternion.Slerp(camera.localRotation, m_CameraTargetRot,
+            camera.localRotation = Quaternion.Slerp (camera.localRotation, m_CameraTargetRot,
                 smoothTime * Time.deltaTime);
         }
         else
@@ -58,11 +58,11 @@ public class MouseLook
         q.z /= q.w;
         q.w = 1.0f;
 
-        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan (q.x);
 
-        angleX = Mathf.Clamp(angleX, MinimumX, MaximumX);
+        angleX = Mathf.Clamp (angleX, MinimumX, MaximumX);
 
-        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+        q.x = Mathf.Tan (0.5f * Mathf.Deg2Rad * angleX);
 
         return q;
     }

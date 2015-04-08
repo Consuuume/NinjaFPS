@@ -41,6 +41,8 @@ public class MP_RigidBodyFPSController : MonoBehaviour
                 //forwards
                 //handled last as if strafing and moving forward at the same time forwards speed should take precedence
                 CurrentTargetSpeed = ForwardSpeed;
+                
+                
             }
 #if !MOBILE_INPUT
             if (InputManager.ActiveDevice.LeftTrigger)
@@ -84,6 +86,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
 
     private Rigidbody _mRigidBody;
     private CapsuleCollider _mCapsule;
+    private Animator _mAnimator;
     private float _mYRotation;
     private Vector3 _mGroundContactNormal;
     private bool _mJump, _mPreviouslyGrounded, _mJumping, _mIsGrounded;
@@ -121,6 +124,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         _mRigidBody = GetComponent<Rigidbody>();
         _mCapsule = GetComponent<CapsuleCollider>();
+        _mAnimator = transform.FindChild("MotusMan_v2").GetComponent<Animator>();
         MouseLook.Init(transform, Cam.transform, PlayerIndex);
         _activeDevice = (InputManager.Devices.Count > PlayerIndex) ? InputManager.Devices[PlayerIndex] : null;
     }
@@ -141,6 +145,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         GroundCheck();
         Vector2 input = GetInput();
+        _mAnimator.SetFloat("Forward", input.y);
 
         if ((Mathf.Abs(input.x) > float.Epsilon || Mathf.Abs(input.y) > float.Epsilon) && (advancedSettings.AirControl || _mIsGrounded))
         {

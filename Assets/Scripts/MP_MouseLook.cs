@@ -1,6 +1,6 @@
 using System;
+using InControl;
 using UnityEngine;
-using TeamUtility.IO;
 
 [Serializable]
 public class MP_MouseLook
@@ -13,22 +13,28 @@ public class MP_MouseLook
     public bool smooth;
     public float smoothTime = 5f;
 
+    public int PlayerIndex;
+
 
     private Quaternion m_CharacterTargetRot;
     private Quaternion m_CameraTargetRot;
 
+    private InputDevice _activeDevice;
 
-    public void Init(Transform character, Transform camera)
+
+    public void Init(Transform character, Transform camera, int playerIndex)
     {
         m_CharacterTargetRot = character.localRotation;
         m_CameraTargetRot = camera.localRotation;
+        PlayerIndex = playerIndex;
+        _activeDevice = (InputManager.Devices.Count > PlayerIndex) ? InputManager.Devices[PlayerIndex] : null;
     }
 
 
     public void LookRotation(Transform character, Transform camera)
     {
-        float yRot = InputManager.GetAxis("LookHorizontal") * XSensitivity;
-        float xRot = InputManager.GetAxis("LookVertical") * YSensitivity;
+        float yRot = _activeDevice.RightStickX * XSensitivity;
+        float xRot = _activeDevice.RightStickY * YSensitivity;
 
         m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
         m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.Utility;
 
 public class MP_HeadBob : MonoBehaviour

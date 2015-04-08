@@ -1,7 +1,6 @@
 ﻿using System;
-using TeamUtility.IO;
+using InControl;
 using UnityEngine;
-using UnityStandardAssets.Characters.FirstPerson;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -44,7 +43,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
                 CurrentTargetSpeed = ForwardSpeed;
             }
 #if !MOBILE_INPUT
-            if (InputManager.GetKey(RunKey))
+            if (InputManager.ActiveDevice.LeftTrigger)
             {
                 CurrentTargetSpeed *= RunMultiplier;
                 _mRunning = true;
@@ -81,6 +80,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     public MP_MouseLook MouseLook = new MP_MouseLook();
     public AdvancedSettings advancedSettings = new AdvancedSettings();
 
+    private InputDevice _activeDevice;
 
     private Rigidbody _mRigidBody;
     private CapsuleCollider _mCapsule;
@@ -121,8 +121,8 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         _mRigidBody = GetComponent<Rigidbody>();
         _mCapsule = GetComponent<CapsuleCollider>();
-        MouseLook.Init(transform, Cam.transform);
-        InputManager.SetInputConfiguration("KeyboardAndMouse");
+        MouseLook.Init(transform, Cam.transform, PlayerIndex);
+        _activeDevice = (InputManager.Devices.Count > PlayerIndex) ? InputManager.Devices[PlayerIndex] : null;
     }
 
 
@@ -130,7 +130,7 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         RotateView();
 
-        if (InputManager.GetButtonDown("Jump") && !_mJump)
+        if (_activeDevice.Action1 && !_mJump)
         {
             _mJump = true;
         }
@@ -213,8 +213,8 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         Vector2 input = new Vector2
         {
-            x = InputManager.GetAxis("Horizontal"),
-            y = InputManager.GetAxis("Vertical")
+            x = _activeDevice.LeftStickX,
+            y = _activeDevice.LeftStickY
         };
         movementSettings.UpdateDesiredTargetSpeed(input);
         return input;

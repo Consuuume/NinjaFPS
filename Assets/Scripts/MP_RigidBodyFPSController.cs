@@ -134,9 +134,19 @@ public class MP_RigidBodyFPSController : MonoBehaviour
     {
         RotateView();
 
-        if (_activeDevice.Action1 && !_mJump)
+        if (_activeDevice != null)
         {
-            _mJump = true;
+            if (_activeDevice.Action1 && !_mJump)
+            {
+                _mJump = true;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && !_mJump)
+            {
+                _mJump = true;
+            }
         }
     }
 
@@ -216,11 +226,23 @@ public class MP_RigidBodyFPSController : MonoBehaviour
 
     private Vector2 GetInput()
     {
-        Vector2 input = new Vector2
+        Vector2 input;
+        if (_activeDevice == null)
         {
-            x = _activeDevice.LeftStickX,
-            y = _activeDevice.LeftStickY
-        };
+            input = new Vector2
+            {
+                x = Input.GetAxis("Horizontal"),
+                y = Input.GetAxis("Vertical")
+            };
+        }
+        else
+        {
+            input = new Vector2
+            {
+                x = _activeDevice.LeftStickX,
+                y = _activeDevice.LeftStickY
+            };
+        }
         movementSettings.UpdateDesiredTargetSpeed(input);
         return input;
     }

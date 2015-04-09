@@ -199,7 +199,7 @@ ModelImporter:
       name: MOB1_M1_Stand_Relaxed_Idle
       takeName: MOB1_M1_Stand_Relaxed_Idle
       firstFrame: 0
-      lastFrame: 0
+      lastFrame: 120
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

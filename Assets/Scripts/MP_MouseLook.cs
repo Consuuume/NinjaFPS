@@ -33,8 +33,17 @@ public class MP_MouseLook
 
     public void LookRotation(Transform character, Transform camera)
     {
-        float yRot = _activeDevice.RightStickX * XSensitivity;
-        float xRot = _activeDevice.RightStickY * YSensitivity;
+        float xRot, yRot;
+        if (_activeDevice != null)
+        {
+            yRot = _activeDevice.RightStickX * XSensitivity;
+            xRot = _activeDevice.RightStickY * YSensitivity;
+        }
+        else
+        {
+            yRot = Input.GetAxis("mouse x") * XSensitivity;
+            xRot = Input.GetAxis("mouse y") * YSensitivity; 
+        }
 
         m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
         m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
